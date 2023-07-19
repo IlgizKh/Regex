@@ -3,7 +3,7 @@ import csv
 
 
 def create_list(file):
-    with open(file) as f:
+    with open(file, encoding="utf8") as f:
         rows = csv.reader(f, delimiter=",")
         contacts_list = list(rows)
         return contacts_list
@@ -38,23 +38,16 @@ def names(list):
 
 def merge(list):
     new_list = []
-    for column in list[1:]:
+    for i, column in enumerate(list):
         first_name = column[0]
         last_name = column[1]
-        for contact in list:
+        for j, contact in enumerate(list):
             new_first_name = contact[0]
             new_last_name = contact[1]
-            if first_name == new_first_name and last_name == new_last_name:
-                if column[2] == '':
-                    column[2] = contact[2]
-                if column[3] == '':
-                    column[3] = contact[3]
-                if column[4] == '':
-                    column[4] = contact[4]
-                if column[5] == '':
-                    column[5] = contact[5]
-                if column[6] == '':
-                    column[6] = contact[6]
+            if first_name == new_first_name and last_name == new_last_name and contact != column:
+                new_contact = [y if x == "" else x for x, y in zip(column, contact)]
+                list[i] = new_contact
+                list[j] = new_contact
 
     for contact in list:
         if contact not in new_list:
@@ -63,7 +56,7 @@ def merge(list):
 
 
 def write_to_file(list):
-    with open("phonebook.csv", "w") as f:
+    with open("phonebook.csv", "w", encoding="utf8") as f:
         datawriter = csv.writer(f, delimiter=',')
 
         ## Вместо contacts_list подставьте свой список:
